@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Form\ProductType;
+use App\Form\ProductForm;
 use App\Repository\ProductRepository;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,7 +53,7 @@ class ProductController extends AbstractFOSRestController
 
     protected function tryToSave(Request $request, ProductRepository $productRepository, Product $product): Response
     {
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(ProductForm::class, $product);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
