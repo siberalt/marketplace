@@ -17,9 +17,6 @@ class Product
     private ?string $name = null;
 
     #[ORM\Column]
-    private ?int $code = null;
-
-    #[ORM\Column]
     private ?int $cost = null;
 
     public function getId(): ?int
@@ -35,18 +32,6 @@ class Product
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCode(): ?int
-    {
-        return $this->code;
-    }
-
-    public function setCode(int $code): self
-    {
-        $this->code = $code;
 
         return $this;
     }
