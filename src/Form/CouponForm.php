@@ -3,7 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Coupon;
+use App\Enum\CouponType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,7 +16,10 @@ class CouponForm extends AbstractType
     {
         $builder
             ->add('code')
-            ->add('type')
+            ->add('value', IntegerType::class)
+            ->add('type', EnumType::class, [
+                'class' => CouponType::class
+            ])
         ;
     }
 
