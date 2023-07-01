@@ -2,18 +2,16 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\PurchaseRepository;
+use App\Service\PurchaseService;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PurchaseController extends AbstractController
+class PurchaseController extends AbstractFOSRestController
 {
-    #[Route('/purchase', name: 'app_purchase')]
-    public function index(): JsonResponse
+    #[Route('/purchase', name: 'app_purchase', methods: ['POST'])]
+    public function purchase(PurchaseService $service, PurchaseRepository $repository)
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PurchaseController.php',
-        ]);
+
     }
 }
