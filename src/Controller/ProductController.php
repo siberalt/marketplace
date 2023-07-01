@@ -6,9 +6,11 @@ use App\Entity\Product;
 use App\Form\ProductForm;
 use App\Repository\ProductRepository;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use OpenApi\Attributes as OA;
 
 class ProductController extends AbstractFOSRestController
 {
@@ -39,12 +41,18 @@ class ProductController extends AbstractFOSRestController
         return $this->handleView($view);
     }
 
+    #[OA\RequestBody(
+        content: new OA\JsonContent(ref: new Model(type: Product::class, groups: ['request']))
+    )]
     #[Route('/product/{id}', name: 'app_product_update', methods: 'PUT')]
     public function update(Product $product, ProductRepository $productRepository, Request $request): Response
     {
         return $this->tryToSave($request, $productRepository, $product);
     }
 
+    #[OA\RequestBody(
+        content: new OA\JsonContent(ref: new Model(type: Product::class, groups: ['request']))
+    )]
     #[Route('/product', name: 'app_product_create', methods: 'POST')]
     public function create(ProductRepository $productRepository, Request $request): Response
     {
@@ -53,8 +61,9 @@ class ProductController extends AbstractFOSRestController
 
     protected function tryToSave(Request $request, ProductRepository $productRepository, Product $product): Response
     {
+        $data = json_decode($request->getContent(), true);
         $form = $this->createForm(ProductForm::class, $product);
-        $form->handleRequest($request);
+        $form->submit($data);
 
         if ($form->isValid()) {
             $productRepository->save($product, true);
