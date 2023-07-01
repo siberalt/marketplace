@@ -1,10 +1,21 @@
 <?php
 
-namespace App\Helper;
+namespace App\Service;
 
-class TaxNumberHelper
+use App\Repository\TaxRepository;
+
+class TaxNumberService
 {
     protected array $regexes = [];
+
+    public function __construct(TaxRepository $taxRepository)
+    {
+        $taxes = $taxRepository->findAll();
+
+        foreach ($taxes as $tax) {
+            $this->addFormat($tax->getCountryIso(), $tax->getFormat());
+        }
+    }
 
     public function addFormat(string $countryIso, string $format): static
     {

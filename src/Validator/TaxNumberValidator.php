@@ -2,8 +2,7 @@
 
 namespace App\Validator;
 
-use App\Helper\TaxNumberHelper;
-use App\Repository\TaxRepository;
+use App\Service\TaxNumberService;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -11,18 +10,11 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 class TaxNumberValidator extends ConstraintValidator
 {
-    protected TaxNumberHelper $taxNumberHelper;
+    protected TaxNumberService $taxNumberService;
 
-    public function __construct(TaxRepository $taxRepository)
+    public function __construct(TaxNumberService $taxNumberService)
     {
-        $taxNumberHelper = new TaxNumberHelper();
-        $taxes = $taxRepository->findAll();
-
-        foreach ($taxes as $tax) {
-            $taxNumberHelper->addFormat($tax->getCountryIso(), $tax->getFormat());
-        }
-
-        $this->taxNumberHelper = $taxNumberHelper;
+        $this->taxNumberService = $taxNumberService;
     }
 
     public function validate(mixed $value, Constraint $constraint)
@@ -39,7 +31,7 @@ class TaxNumberValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'string');
         }
 
-        if (null === $this->taxNumberHelper->parseCountryIso($value)) {
+        if (null === $this->taxNumberService->parseCountryIso($value)) {
             $this->context->addViolation('Tax number is invalid');
         }
     }
