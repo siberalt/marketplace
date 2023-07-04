@@ -65,7 +65,7 @@ class ProductController extends AbstractFOSRestController
         $form = $this->createForm(ProductForm::class, $product);
         $form->submit($data);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $productRepository->save($product, true);
             $view = $this->view($product, 200);
         }  else {

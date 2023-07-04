@@ -38,4 +38,13 @@ class TaxRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+     * @param string $countryIso
+     * @return Tax|null
+     */
+    public function findByCountryIso(string $countryIso): ?Tax
+    {
+        return $this->findOneBy(['countryIso' => $countryIso]);
+    }
 }

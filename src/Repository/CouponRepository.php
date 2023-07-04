@@ -38,4 +38,13 @@ class CouponRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+     * @param string $couponCode
+     * @return Coupon|null
+     */
+    public function findByCouponCode(string $couponCode): ?Coupon
+    {
+        return $this->findOneBy(['couponCode' => $couponCode]);
+    }
 }
