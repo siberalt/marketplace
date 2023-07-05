@@ -2,7 +2,7 @@
 
 namespace App\Validator;
 
-use App\Service\TaxNumberService;
+use App\Service\TaxService;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -10,11 +10,11 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 class TaxNumberValidator extends ConstraintValidator
 {
-    protected TaxNumberService $taxNumberService;
+    protected TaxService $taxService;
 
-    public function __construct(TaxNumberService $taxNumberService)
+    public function __construct(TaxService $taxService)
     {
-        $this->taxNumberService = $taxNumberService;
+        $this->taxService = $taxService;
     }
 
     public function validate(mixed $value, Constraint $constraint)
@@ -31,7 +31,7 @@ class TaxNumberValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'string');
         }
 
-        if (null === $this->taxNumberService->parseCountryIso($value)) {
+        if (null === $this->taxService->parseCountryIso($value)) {
             $this->context->addViolation('Tax number is invalid');
         }
     }

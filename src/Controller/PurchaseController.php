@@ -4,20 +4,22 @@ namespace App\Controller;
 
 use App\Entity\Purchase;
 use App\Form\PurchaseForm;
-use App\Repository\PurchaseRepository;
-use App\Service\PurchaseService;
+use App\Nelmio\PurchaseRequest;
+use App\Service\Purchase\PaymentFailedException;
+use App\Service\Purchase\PurchaseService;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use OpenApi\Attributes as OA;
 
 class PurchaseController extends AbstractFOSRestController
 {
-
-    #[OA\QueryParameter(
-
-    )]
+    #[OA\QueryParameter(name: 'product', in: 'query', required: true)]
+    #[OA\QueryParameter(name: 'taxNumber', in: 'query', required: true)]
+    #[OA\QueryParameter(name: 'couponCode', in: 'query', required: false)]
+    #[OA\QueryParameter(name: 'paymentProcessor', in: 'query', required: true)]
     #[Route('/purchase', name: 'app_purchase_cost', methods: ['GET'])]
     public function purchaseCost(Request $request, PurchaseService $purchaseService): Response
     {
@@ -36,8 +38,14 @@ class PurchaseController extends AbstractFOSRestController
         return $this->handleView($view);
     }
 
+    /**
+     * @throws PaymentFailedException
+     */
+    #[OA\RequestBody(
+        content: new OA\JsonContent(ref: new Model(type: PurchaseRequest::class))
+    )]
     #[Route('/purchase', name: 'app_purchase_make', methods: ['POST'])]
-    public function purchaseMake(Request $request, PurchaseService $purchaseService, PurchaseRepository $repository)
+    public function purchaseMake(Request $request, PurchaseService $purchaseService): Response
     {
         $purchase = new Purchase();
         $data = json_decode($request->getContent());
