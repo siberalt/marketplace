@@ -18,8 +18,13 @@ class PaymentManager
 
     public function __construct(protected PurchaseRepository $purchaseRepository)
     {
-        $this->addPaymentProcessor('stripe' , new StripePaymentAdapter());
-        $this->addPaymentProcessor('paypal' , new PaypalPaymentAdapter());
+        $this->registerProcessor('stripe' , new StripePaymentAdapter());
+        $this->registerProcessor('paypal' , new PaypalPaymentAdapter());
+    }
+
+    public function isProcessorRegistered(string $paymentProcessorName): bool
+    {
+        return in_array($paymentProcessorName, $this->getProcessorsNames(), true);
     }
 
     public function getProcessorsNames(): array
@@ -27,7 +32,7 @@ class PaymentManager
         return array_keys($this->paymentProcessors);
     }
 
-    public function addPaymentProcessor(string $processorName, PaymentProcessorInterface $processor): void
+    public function registerProcessor(string $processorName, PaymentProcessorInterface $processor): void
     {
         $this->paymentProcessors[$processorName] = $processor;
     }

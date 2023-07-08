@@ -10,20 +10,20 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
 {
-    #[Groups(groups: ['response'])]
+    #[Groups(groups: ['response', 'make', 'cost'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(groups: ['response', 'request'])]
+    #[Groups(groups: ['response', 'request', 'make', 'cost'])]
     #[ORM\Column(length: 255)]
     #[NotBlank]
     private ?string $name = null;
 
     #[ORM\Column]
     #[NotBlank]
-    #[Groups(groups: ['response', 'request'])]
+    #[Groups(groups: ['response', 'request', 'make', 'cost'])]
     private ?int $cost = null;
 
     public function getId(): ?int

@@ -45,6 +45,6 @@ class CouponRepository extends ServiceEntityRepository
      */
     public function findOneByCouponCode(string $couponCode): ?Coupon
     {
-        return $this->findOneBy(['couponCode' => $couponCode]);
+        return $this->findOneBy(['code' => $couponCode]);
     }
 }

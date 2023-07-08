@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\PurchaseStatus;
 use App\Repository\PurchaseRepository;
+use App\Validator\PaymentProcessor;
 use App\Validator\TaxNumber;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,10 +17,12 @@ class Purchase
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[JMS\Groups(groups: ['make'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[JMS\Groups(groups: ['make', 'cost'])]
     private ?Product $product = null;
 
     #[ORM\Column(length: 255)]
@@ -29,18 +32,24 @@ class Purchase
 
     #[ORM\Column(length: 255)]
     #[NotBlank]
+    #[PaymentProcessor]
+    #[JMS\Groups(groups: ['make', 'cost'])]
     private ?string $paymentProcessor = null;
 
     #[ORM\ManyToOne]
+    #[JMS\Groups(groups: ['make', 'cost'])]
     private ?Coupon $coupon = null;
 
     #[ORM\Column]
+    #[JMS\Groups(groups: ['make', 'cost'])]
     private ?int $cost = null;
 
     #[ORM\Column]
+    #[JMS\Groups(groups: ['make'])]
     private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(enumType: PurchaseStatus::class)]
+    #[JMS\Groups(groups: ['make'])]
     private ?PurchaseStatus $status = null;
 
     public function getId(): ?int
@@ -101,7 +110,7 @@ class Purchase
         return $this->cost;
     }
 
-    public function setCost(int $cost): static
+    public function setCost(?int $cost): static
     {
         $this->cost = $cost;
 

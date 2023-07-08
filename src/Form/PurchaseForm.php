@@ -2,11 +2,10 @@
 
 namespace App\Form;
 
-use App\Entity\Product;
+use App\Entity\Coupon;
 use App\Entity\Purchase;
 use App\Form\Transformers\CodeToCouponTransformer;
-use Doctrine\Persistence\ManagerRegistry;
-use FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer;
+use App\Form\Transformers\IdToProductTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class PurchaseForm extends AbstractType
 {
     public function __construct(
-        protected ManagerRegistry $objectManager,
+        protected IdToProductTransformer $productTransformer,
         protected CodeToCouponTransformer $couponTransformer
     )
     {}
@@ -23,15 +22,24 @@ class PurchaseForm extends AbstractType
     {
         $builder
             ->add('taxNumber')
-            ->add('couponCode')
+            ->add('couponCode', options: [
+                'setter' => function(Purchase $purchase, ?Coupon $coupon) {
+                    $purchase->setCoupon($coupon);
+                },
+                'getter' => function(Purchase $purchase): ?Coupon {
+                    return $purchase->getCoupon();
+                }
+            ])
             ->add('paymentProcessor')
             ->add('product')
         ;
 
         $builder->get('product')
-            ->addModelTransformer(new EntityToIdObjectTransformer($this->objectManager, Product::class));
+            ->addModelTransformer($this->productTransformer)
+            ->resetViewTransformers();
         $builder->get('couponCode')
-            ->addModelTransformer($this->couponTransformer);
+            ->addModelTransformer($this->couponTransformer)
+            ->resetViewTransformers();
     }
 
     public function configureOptions(OptionsResolver $resolver): void

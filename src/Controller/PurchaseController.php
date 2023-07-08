@@ -30,8 +30,10 @@ class PurchaseController extends AbstractFOSRestController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $cost = $purchaseService->calculateCost($purchase);
-            $view = $this->view($cost, 200);
-        }  else {
+            $purchase->setCost($cost);
+            $view = $this->view($purchase, 200);
+            $view->getContext()->setGroups(['cost']);
+        } else {
             $view = $this->view($form);
         }
 
@@ -48,14 +50,15 @@ class PurchaseController extends AbstractFOSRestController
     public function purchaseMake(Request $request, PurchaseService $purchaseService): Response
     {
         $purchase = new Purchase();
-        $data = json_decode($request->getContent());
+        $data = json_decode($request->getContent(), true);
         $form = $this->createForm(PurchaseForm::class, $purchase);
         $form->submit($data);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $purchaseService->makePurchase($purchase);
             $view = $this->view($purchase, 200);
-        }  else {
+            $view->getContext()->setGroups(['make']);
+        } else {
             $view = $this->view($form);
         }
 

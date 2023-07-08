@@ -33,6 +33,10 @@ class CodeToCouponTransformer implements DataTransformerInterface
      */
     public function reverseTransform(mixed $value): ?Coupon
     {
+        if (empty($value)) {
+            return null;
+        }
+
         $coupon = $this->couponRepository->findOneByCouponCode($value);
 
         if (null === $coupon) {

@@ -53,7 +53,7 @@ class TaxService
     public function parseCountryIso(string $taxNumber): ?string
     {
         foreach ($this->taxNumberRegexes as $countryIso => $regex) {
-            if (preg_match($regex, $taxNumber)) {
+            if (preg_match("/$regex/", $taxNumber)) {
                 return $countryIso;
             }
         }

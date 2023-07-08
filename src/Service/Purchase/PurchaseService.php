@@ -26,7 +26,7 @@ class PurchaseService
         $cost = $purchase->getProduct()->getCost();
         $cost += $this->taxService->calculateTax($purchase);
         $purchase->setCost($cost);
-        $cost -= $this->couponService->calculateDiscount($purchase);
+        $cost = max($cost - $this->couponService->calculateDiscount($purchase), 0);
         $purchase->setCost($oldCost);
 
         return $cost;

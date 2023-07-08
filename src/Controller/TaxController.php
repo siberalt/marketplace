@@ -14,7 +14,7 @@ use OpenApi\Attributes as OA;
 
 class TaxController extends AbstractFOSRestController
 {
-    #[Route('/tax', name: 'app_tax', methods: 'GET')]
+    #[Route('/tax', name: 'app_tax_index', methods: 'GET')]
     public function index(TaxRepository $taxRepository): Response
     {
         $view = $this->view($taxRepository->findAll(), 200);
@@ -22,7 +22,7 @@ class TaxController extends AbstractFOSRestController
         return $this->handleView($view);
     }
 
-    #[Route('/tax/{id}', name: 'app_tax', methods: 'GET')]
+    #[Route('/tax/{id}', name: 'app_tax_get', methods: 'GET')]
     public function get(int $id, TaxRepository $taxRepository): Response
     {
         $view = $this->view($taxRepository->find($id), 200);
@@ -65,7 +65,7 @@ class TaxController extends AbstractFOSRestController
         $form = $this->createForm(TaxForm::class, $tax);
         $form->submit($data);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $taxRepository->save($tax, true);
             $view = $this->view($tax, 200);
         }  else {
