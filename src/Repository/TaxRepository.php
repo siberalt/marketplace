@@ -47,4 +47,9 @@ class TaxRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['countryIso' => $countryIso]);
     }
+
+    public function flush()
+    {
+        $this->getEntityManager()->flush();
+    }
 }

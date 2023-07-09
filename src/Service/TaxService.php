@@ -35,7 +35,7 @@ class TaxService
 
         $tax = $this->taxRepository->findByCountryIso($countryIso);
 
-        return ($productCost * $tax->getPercent() / 100);
+        return $productCost * ($tax->getPercent() / 100);
     }
 
     public function addTaxNumberFormat(string $countryIso, string $format): static

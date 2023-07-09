@@ -6,7 +6,7 @@ use App\Entity\Purchase;
 use App\Enum\PurchaseStatus;
 use App\Repository\PurchaseRepository;
 use DateTimeImmutable;
-use http\Exception\RuntimeException;
+use RuntimeException;
 use Throwable;
 
 class PaymentManager
